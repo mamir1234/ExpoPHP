@@ -1,0 +1,541 @@
+/* ==========================================
+   PALETA DE COLORES CORPORATIVA - CONTROL IT
+   ========================================== */
+:root {
+    --color-slate-100: #E2E8F0;
+    --color-mint: #68DEB3;
+    --color-emerald-500: #10B981;
+    --color-emerald-800: #065F46;
+    --color-slate-900: #0F172A;
+    --color-bg-main: #F8FAFC;
+    --color-sidebar: #0F172A;
+    --color-text-muted: #64748B;
+}
+
+/* Estructura Global */
+body {
+    background-color: var(--color-bg-main);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    color: #334155;
+    overflow-x: hidden;
+}
+
+.text-emerald {
+    color: var(--color-mint) !important;
+}
+
+/* ==========================================
+   ESTILOS DE ACCESO (LOGIN / REGISTRO / BIENVENIDA)
+   Foto de fondo a pantalla completa, difuminada
+   ========================================== */
+.auth-page {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--color-slate-900);
+}
+
+/* Foto de fondo difuminada (más blur cerca del texto, menos hacia la derecha) */
+.auth-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('img/login.webp');
+    background-size: cover;
+    background-position: center;
+    filter: blur(2px) brightness(0.75) saturate(1.1);
+    transform: scale(1.08);
+    z-index: 0;
+}
+
+/* Capa nítida, visible solo del lado derecho, para apreciar mejor la foto */
+.auth-bg-sharp {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('img/login.webp');
+    background-size: cover;
+    background-position: center;
+    filter: blur(0.6px);
+    z-index: 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 45%, black 78%, black 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, transparent 45%, black 78%, black 100%);
+}
+
+/* Degradado con los colores de marca sobre la foto */
+.auth-page::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(
+        90deg,
+        rgba(15, 23, 42, 0.92) 0%,
+        rgba(15, 23, 42, 0.78) 22%,
+        rgba(15, 23, 42, 0.45) 42%,
+        rgba(15, 23, 42, 0.12) 60%,
+        rgba(15, 23, 42, 0.00) 78%
+    );
+
+    z-index: 1;
+}
+.auth-topbar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 3rem;
+}
+
+.auth-brand {
+    color: #FFF;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05rem;
+}
+
+.auth-brand i {
+    color: var(--color-mint);
+}
+
+.auth-back-link {
+    color: var(--color-slate-100);
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+
+.auth-back-link:hover {
+    color: var(--color-mint);
+}
+
+.auth-content {
+    position: relative;
+    z-index: 2;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 5vw 3rem 11vw;
+}
+
+.auth-content-inner {
+    width: 100%;
+    max-width: 780px;
+    text-align: left;
+}
+
+.auth-glass {
+    width: 100%;
+    max-width: 780px;
+
+    background: rgba(15, 23, 42, 0.38);
+    backdrop-filter: blur(22px) saturate(130%);
+    -webkit-backdrop-filter: blur(22px) saturate(130%);
+
+    border: 1px solid rgba(226, 232, 240, 0.22);
+    border-radius: 20px;
+
+    padding: 3.5rem 4rem;
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    text-align: left;
+}
+
+.auth-glass .mb-4 {
+    margin-bottom: 1.8rem !important;
+}
+
+.auth-glass .d-flex.gap-3 {
+    margin-top: 2rem !important;
+}
+
+.auth-label {
+    color: var(--color-mint);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.auth-title {
+    color: #FFF;
+    font-weight: 800;
+    font-size: 3.2rem;
+    line-height: 1.1;
+    margin: 0.75rem 0 1rem;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.35);
+}
+
+.auth-title .text-accent {
+    color: var(--color-mint);
+}
+
+.auth-subtitle {
+    color: #FFFFFF;
+    opacity: 0.95;
+    font-size: 1.05rem;
+    margin-bottom: 2.25rem;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+}
+
+/* Panel de vidrio esmerilado, solo alrededor del formulario */
+
+
+/* Etiqueta encima de cada campo */
+.field-label {
+    display: block;
+    color: var(--color-slate-100);
+    opacity: 0.9;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 0.65rem;
+}
+
+/* Fila "Recordarme" / "Olvidé mi contraseña" y checkbox de términos */
+.auth-extra-row {
+    margin-top: 0.5rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.25rem;
+    font-size: 0.9rem;
+}
+
+.auth-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-slate-100);
+    opacity: 0.9;
+    cursor: pointer;
+    margin: 0;
+}
+
+.auth-checkbox input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 19px;
+    height: 19px;
+    margin: 0;
+    border: 2px solid rgba(226, 232, 240, 0.45);
+    border-radius: 5px;
+    background: rgba(15, 23, 42, 0.4);
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.auth-checkbox input:hover {
+    border-color: var(--color-mint);
+}
+
+.auth-checkbox input:checked {
+    background: var(--color-emerald-500);
+    border-color: var(--color-emerald-500);
+}
+
+.auth-checkbox input:checked::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 4px;
+    height: 9px;
+    border: solid #FFF;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.auth-footer {
+    margin-top: 2.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #FFFFFF;
+    opacity: 0.85;
+    text-align: center;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 900px) {
+    .auth-content { justify-content: center; padding: 2rem; }
+    .auth-content-inner { text-align: center; }
+    .auth-glass { text-align: left; }
+}
+
+@media (max-width: 576px) {
+    .auth-topbar { padding: 1.5rem; }
+    .auth-glass { padding: 1.75rem; }
+    .auth-title { font-size: 2.25rem; }
+}
+
+/* --- Formulario --- */
+.form-control-custom {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(226, 232, 240, 0.2) !important;
+    color: var(--color-slate-100) !important;
+    padding: 0.95rem 1rem 0.95rem 3rem;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+.form-control-custom::placeholder {
+    color: #CBD5E1 !important;
+    opacity: 1;
+}
+
+.form-control-custom:focus {
+    border-color: var(--color-emerald-500) !important;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25) !important;
+}
+
+/* Evita que el autocompletado del navegador (nombre, correo, etc.)
+   ponga un fondo blanco distinto al del resto de los campos */
+.form-control-custom:-webkit-autofill,
+.form-control-custom:-webkit-autofill:hover,
+.form-control-custom:-webkit-autofill:focus,
+.form-control-custom:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--color-slate-100) !important;
+    -webkit-box-shadow: 0 0 0 1000px rgba(15, 23, 42, 0.6) inset !important;
+    box-shadow: 0 0 0 1000px rgba(15, 23, 42, 0.6) inset !important;
+    caret-color: var(--color-slate-100);
+    transition: background-color 9999s ease-in-out 0s;
+}
+
+.input-group-custom {
+    position: relative;
+}
+
+.input-group-custom i {
+    position: absolute;
+    left: 1.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94A3B8;
+    font-size: 1.05rem;
+}
+
+.btn-principal {
+    background-color: var(--color-emerald-500);
+    color: #FFF;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.95rem;
+    border: none;
+    border-radius: 10px;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.btn-principal:hover {
+    background-color: var(--color-mint);
+    color: var(--color-slate-900);
+    box-shadow: 0 4px 12px rgba(104, 222, 179, 0.3);
+}
+
+.btn-outline-auth {
+    background-color: transparent;
+    color: var(--color-slate-100);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.95rem;
+    border: 1px solid rgba(226, 232, 240, 0.3);
+    border-radius: 10px;
+    width: 100%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-outline-auth:hover {
+    border-color: var(--color-mint);
+    color: var(--color-mint);
+    background-color: rgba(104, 222, 179, 0.08);
+}
+
+/* ==========================================
+   ESTILOS DEL PANEL INTERNO PRINCIPAL
+   ========================================== */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Lateral */
+.sidebar {
+    width: 260px;
+    background-color: var(--color-sidebar);
+    color: var(--color-slate-100);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.sidebar-brand {
+    padding: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #FFF;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-brand i {
+    color: var(--color-mint);
+}
+
+.nav-menu {
+    padding: 1rem 0;
+    flex-grow: 1;
+}
+
+.nav-item-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    color: #94A3B8;
+    text-decoration: none;
+    gap: 12px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
+}
+
+.nav-item-link:hover, .nav-item-link.active {
+    color: #FFF;
+    background-color: rgba(16, 185, 129, 0.15);
+    border-left-color: var(--color-emerald-500);
+}
+
+.sidebar-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(226, 232, 240, 0.05);
+    background-color: rgba(0,0,0,0.15);
+}
+
+/* Contenido Central */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #F1F5F9;
+}
+
+/* Barra Superior */
+.top-navbar {
+    background-color: #FFF;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Tarjetas de Métricas e Información */
+.metric-card {
+    background: #FFF;
+    border: none;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.metric-card small {
+    color: var(--color-text-muted);
+}
+
+.metric-icon-box {
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 1.5rem;
+}
+
+/* Tablas e Interfaces Limpias */
+.custom-card-panel {
+    background: #FFF;
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.table-custom th {
+    background-color: var(--color-emerald-800) !important;
+    color: #FFF !important;
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 12px 16px;
+}
+
+.table-custom td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    color: #334155;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+/* Estados de Etiquetas Visuales */
+.badge-status {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    display: inline-block;
+}
+.status-disponible { background: #DCFCE7; color: var(--color-emerald-800); }
+.status-enuso { background: #FEF9C3; color: #A16207; }
+.status-danado { background: #FEE2E2; color: #B91C1C; }
+
+/* Escáner de Simulación Inteligente IA */
+.scanner-viewport {
+    background: var(--color-slate-900);
+    border: 2px solid var(--color-emerald-500);
+    border-radius: 12px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.scanner-laser {
+    position: absolute;
+    background: rgba(239, 68, 68, 0.7);
+    height: 2px;
+    width: 90%;
+    top: 50%;
+    animation: scanning 2s infinite ease-in-out;
+    box-shadow: 0 0 8px #EF4444;
+}
+@keyframes scanning {
+    0% { top: 15%; }
+    50% { top: 85%; }
+    100% { top: 15%; }
+}
+
+/* Clases funcionales de renderizado de la app */
+.view-section { display: none; }
+.view-section.active-view { display: block; }
+.hidden-element { display: none !important; }
