@@ -38,6 +38,7 @@ $totalActivos   = $conn->query("SELECT COUNT(*) FROM activos")->fetchColumn() ?:
 $totalPrestamos = $conn->query("SELECT COUNT(*) FROM prestamos")->fetchColumn() ?: 0;
 $totalLabs      = $conn->query("SELECT COUNT(*) FROM laboratorio")->fetchColumn() ?: 0;
 $totalFallas    = $conn->query("SELECT COUNT(*) FROM incidencias")->fetchColumn() ?: 0;
+$verBajasPanel  = isset($_GET['ver_bajas']) && $_GET['ver_bajas'] === '1';
 // Control de variables de estado
 $estaAutenticado = $_SESSION['autenticado'] ?? false;
 $rolActual       = $_SESSION['rolActual'] ?? 'Invitado';
@@ -112,6 +113,15 @@ $iconosModulos = [
 $vista = $_GET['vista'] ?? 'login';
 $moduloId = $_GET['modulo'] ?? 'inicio';
 $txtModuloActual = $titulosModulos[$moduloId] ?? 'Panel Principal';
+
+// El módulo de Activos necesita su propia lógica (filtros, CRUD).
+// Solo se carga si se está viendo ese módulo o si el formulario le pertenece.
+$accionesActivos = ['crear_activo', 'editar_activo', 'dar_de_baja'];
+$esAccionActivos = $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && in_array($_POST['accion'], $accionesActivos);
+
+if ($estaAutenticado && ($moduloId === 'activos' || $esAccionActivos)) {
+    require_once 'activos_logica.php';
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -336,13 +346,21 @@ $txtModuloActual = $titulosModulos[$moduloId] ?? 'Panel Principal';
 
                         <!-- Tabla con Datos Dinámicos de la BD -->
                         <div class="custom-card-panel">
-                            <h6 class="fw-bold mb-3"><i class="bi bi-list-check me-2"></i>Últimos Movimientos de Inventario</h6>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="fw-bold m-0"><i class="bi bi-list-check me-2"></i>Últimos Movimientos de Inventario</h6>
+                                <div class="form-check form-switch m-0">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="switchVerBajas"
+                                        <?php echo $verBajasPanel ? 'checked' : ''; ?>
+                                        onchange="window.location.href = 'index.php?modulo=inicio' + (this.checked ? '&ver_bajas=1' : '')">
+                                    <label class="form-check-label small" for="switchVerBajas">Ver activos de baja</label>
+                                </div>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-custom mb-0">
                                     <thead>
                                         <tr>
-                                            <th>CÓDIGO / ID</th>
-                                            <th>DESCRIPCIÓN DEL ACTIVO</th>
+                                            <th>ID</th>
+                                            <th>NOMBRE / N° SERIE</th>
                                             <th>ESTADO</th>
                                             <th>ACCIONES</th>
                                         </tr>
@@ -350,7 +368,12 @@ $txtModuloActual = $titulosModulos[$moduloId] ?? 'Panel Principal';
                                     <tbody>
                                         <?php
                                         // Consulta a la tabla 'activos' en SQL Server (sintaxis TOP en lugar de LIMIT)
-                                        $stmt = $conn->query("SELECT TOP 10 * FROM activos");
+                                        $sqlUltimos = "SELECT TOP 10 * FROM activos";
+                                        if (!$verBajasPanel) {
+                                            $sqlUltimos .= " WHERE estado <> 'Baja'";
+                                        }
+                                        $sqlUltimos .= " ORDER BY id DESC";
+                                        $stmt = $conn->query($sqlUltimos);
                                         $listaActivos = $stmt->fetchAll();
 
                                         if (count($listaActivos) > 0):
@@ -360,15 +383,22 @@ $txtModuloActual = $titulosModulos[$moduloId] ?? 'Panel Principal';
                                                 // Mapeo de estilos según estado
                                                 $claseEstado = match(mb_strtolower($estado)) {
                                                     'disponible' => 'status-disponible',
-                                                    'en prestamo', 'prestado' => 'status-enuso',
+                                                    'prestado' => 'status-enuso',
+                                                    'baja' => 'status-baja',
                                                     default => 'status-danado'
                                                 };
+
+                                                // Si está de baja, el link debe mostrar las bajas en Activos y abrir su detalle directamente
+                                                $linkVerDetalle = "index.php?modulo=activos&buscar=" . urlencode($item['nombre'] ?? '') . "&ver=" . $item['id'];
+                                                if (mb_strtolower($estado) === 'baja') {
+                                                    $linkVerDetalle .= "&filtro_estado=Baja";
+                                                }
                                         ?>
                                             <tr>
-                                                <td><code><?php echo htmlspecialchars($item['id_activo'] ?? $item['id'] ?? 'ACT-00'); ?></code></td>
-                                                <td><?php echo htmlspecialchars($item['nombre'] ?? $item['descripcion'] ?? 'Sin descripción'); ?></td>
+                                                <td><code><?php echo htmlspecialchars($item['id']); ?></code></td>
+                                                <td><?php echo htmlspecialchars($item['nombre'] ?? '-'); ?> — <?php echo htmlspecialchars($item['numero_placa'] ?? (($item['cantidad'] ?? null) !== null ? $item['cantidad'] . ' uds.' : '-')); ?></td>
                                                 <td><span class="badge-status <?php echo $claseEstado; ?>"><?php echo htmlspecialchars($estado); ?></span></td>
-                                                <td><button class="btn btn-sm btn-light border">Ver detalle</button></td>
+                                                <td><a href="<?php echo $linkVerDetalle; ?>" class="btn btn-sm btn-light border">Ver detalle</a></td>
                                             </tr>
                                         <?php 
                                             endforeach;
@@ -382,6 +412,10 @@ $txtModuloActual = $titulosModulos[$moduloId] ?? 'Panel Principal';
                                 </table>
                             </div>
                         </div>
+                        <?php break; ?>
+
+                    <?php case 'activos': ?>
+                        <?php require 'vista_activos.php'; ?>
                         <?php break; ?>
 
                     <?php case 'escaner': ?>

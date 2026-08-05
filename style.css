@@ -479,6 +479,119 @@ body {
     margin-bottom: 2rem;
 }
 
+.panel-filtros {
+    border-left: 4px solid var(--color-emerald-500);
+}
+
+/* Inputs/selects dentro del panel de filtros y de los modales */
+.panel-filtros .form-select,
+.panel-filtros .form-control,
+.modal-body .form-select,
+.modal-body .form-control,
+.modal-body textarea {
+    border: 1.5px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 0.6rem 0.9rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.panel-filtros .form-select:hover,
+.panel-filtros .form-control:hover,
+.modal-body .form-select:hover,
+.modal-body .form-control:hover,
+.modal-body textarea:hover {
+    border-color: var(--color-mint);
+}
+
+.panel-filtros .form-select:focus,
+.panel-filtros .form-control:focus,
+.modal-body .form-select:focus,
+.modal-body .form-control:focus,
+.modal-body textarea:focus {
+    border-color: var(--color-emerald-500);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.modal-body .form-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--color-text-muted);
+    margin-bottom: 0.4rem;
+}
+
+/* Modales: encabezado de marca, cuerpo espacioso, pie diferenciado */
+.modal-content {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, var(--color-emerald-800), var(--color-emerald-500));
+    border-bottom: none;
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-header-danger {
+    background: linear-gradient(135deg, #991B1B, #DC2626) !important;
+}
+
+.modal-title {
+    color: #FFF;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.modal-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+    opacity: 0.85;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 1.75rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #F1F5F9;
+    padding: 1.1rem 1.5rem;
+    background: #FAFBFC;
+}
+
+/* Filas y miniaturas de la tabla de Activos */
+.table-custom tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.table-custom tbody tr:hover {
+    background-color: #F0FDF9;
+}
+
+.table-custom .btn-light.border:hover {
+    border-color: var(--color-emerald-500) !important;
+    color: var(--color-emerald-800) !important;
+    background: #ECFDF5 !important;
+}
+
+.table-custom .btn-outline-danger:hover {
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+}
+
+.activo-thumb {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.activo-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.2);
+}
+
 .table-custom th {
     background-color: var(--color-emerald-800) !important;
     color: #FFF !important;
@@ -496,6 +609,16 @@ body {
 }
 
 /* Estados de Etiquetas Visuales */
+.form-check-input:checked {
+    background-color: var(--color-emerald-500);
+    border-color: var(--color-emerald-500);
+}
+
+.form-check-input:focus {
+    border-color: var(--color-mint);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
 .badge-status {
     padding: 6px 12px;
     border-radius: 6px;
@@ -506,6 +629,60 @@ body {
 .status-disponible { background: #DCFCE7; color: var(--color-emerald-800); }
 .status-enuso { background: #FEF9C3; color: #A16207; }
 .status-danado { background: #FEE2E2; color: #B91C1C; }
+.status-baja { background: var(--color-slate-100); color: #475569; }
+
+/* ==========================================
+   MÓDULO DE ACTIVOS
+   ========================================== */
+.filtro-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+}
+
+.btn-principal-sm {
+    background-color: var(--color-emerald-500);
+    color: #FFF;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.5rem 1.1rem;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-principal-sm:hover {
+    background-color: var(--color-emerald-800);
+    color: #FFF;
+}
+
+.activo-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.activo-thumb-vacio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-main);
+    color: #94A3B8;
+    border: 1px dashed #CBD5E1;
+    font-size: 1.1rem;
+}
+
+.activo-detalle-img {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+}
 
 /* Escáner de Simulación Inteligente IA */
 .scanner-viewport {
