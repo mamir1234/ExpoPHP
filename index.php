@@ -51,15 +51,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['
     $email = $_POST['email'] ?? '';
     $clave = $_POST['password'] ?? '';
 
-    $stmt = $conn->prepare("SELECT * FROM usuario WHERE correo = :correo AND contrasena = :contrasena");
-    $stmt->execute([
-        'correo'     => $email,
-        'contrasena' => $clave
-    ]);
-    
+    // Ya no comparamos la contraseña directamente en el SELECT: primero traemos
+    // al usuario solo por correo, y la contraseña se valida aparte con password_verify()
+    $stmt = $conn->prepare("SELECT * FROM usuario WHERE correo = :correo");
+    $stmt->execute(['correo' => $email]);
     $userBD = $stmt->fetch();
 
+    $claveValida = false;
+
     if ($userBD) {
+        if (password_verify($clave, $userBD['contrasena'])) {
+            // Caso normal: la contraseña guardada ya es un hash y coincide
+            $claveValida = true;
+        } elseif ($clave === $userBD['contrasena']) {
+            // Cuenta antigua con la contraseña todavía en texto plano:
+            // la dejamos entrar esta vez y de una vez la migramos a hash
+            $claveValida = true;
+            $nuevoHash = password_hash($clave, PASSWORD_DEFAULT);
+
+            $stmtMigrar = $conn->prepare("UPDATE usuario SET contrasena = :clave WHERE id = :id");
+            $stmtMigrar->execute([
+                'clave' => $nuevoHash,
+                'id'    => $userBD['id']
+            ]);
+        }
+    }
+
+    if ($claveValida) {
         $_SESSION['autenticado'] = true;
         $_SESSION['rolActual']   = $userBD['tipo_usuario'] ?? 'Usuario General';
         $_SESSION['idUsuario']   = $userBD['id'];
