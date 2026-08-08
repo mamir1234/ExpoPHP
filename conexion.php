@@ -14,4 +14,7 @@ $conn = new PDO("odbc:Driver={ODBC Driver 17 for SQL Server};Server=$server;Data
     echo "</div>";
     exit;
 }
+//git add .
+//git commit -m "Aquí pones una breve descripción de lo que cambiaste o agregaste"
+//git push
 ?>
